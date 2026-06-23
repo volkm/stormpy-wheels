@@ -68,6 +68,9 @@ jobs:
   release:
     needs: build-wheels
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
       - name: Download built wheels
         uses: actions/download-artifact@v8
@@ -88,6 +91,7 @@ jobs:
         with:
           tag_name: nightly
           name: Nightly build
+          body: Automated nightly build from commit ${{ github.sha }}
           prerelease: true
           files: wheelhouse/*.whl
 
@@ -96,6 +100,9 @@ jobs:
     name: Create index for nightly wheels
     needs: release
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
       - name: Checkout gh-pages
         uses: actions/checkout@v7
