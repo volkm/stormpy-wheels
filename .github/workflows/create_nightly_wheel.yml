@@ -48,21 +48,23 @@ jobs:
 
   build-wheels:
     needs: compute-version
-    strategy:
-      matrix:
-        config:
-          - build_type: Release
-            version_suffix: ""
-          - build_type: Debug
-            version_suffix: "+debug"
-    uses: stormchecker/stormpy/.github/workflows/create_wheel.yml@master
-    with:
-      storm_version: master
-      version: ${{ needs.compute-version.outputs.version }}${{ matrix.config.version_suffix }}
-      full_build: false
-      build_type: ${{ matrix.config.build_type }}
-      repo: stormchecker/stormpy
-      ref: master
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create dummy wheels
+        run: |
+          version="${{ needs.compute-version.outputs.version }}"
+          mkdir -p wheelhouse
+          for os in linux_intel linux_arm macos_intel macos_arm; do
+            echo "stormpy-${version}-cp313-cp313-${os}.whl" \
+            > "wheelhouse/stormpy-${version}-cp313-cp313-${os}.whl"
+            echo "stormpy-${version}-cp314-cp314-${os}.whl" \
+            > "wheelhouse/stormpy-${version}-cp314-cp314-${os}.whl"
+          done
+      - name: Upload dummy wheels
+        uses: actions/upload-artifact@v7
+        with:
+          name: stormpy-wheels-dummy
+          path: wheelhouse/*.whl
 
 
   release:
