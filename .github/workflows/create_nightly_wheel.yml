@@ -67,7 +67,7 @@ jobs:
     with:
       storm_version: master
       version: ${{ needs.compute-version.outputs.version }}${{ matrix.config.version_suffix }}
-      full_build: false
+      dev_build: true
       build_type: ${{ matrix.config.build_type }}
       repo: stormchecker/stormpy
       ref: master
