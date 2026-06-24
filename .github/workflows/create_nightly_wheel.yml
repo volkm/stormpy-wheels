@@ -18,8 +18,8 @@ jobs:
       - name: Checkout stormpy
         uses: actions/checkout@v7
         with:
-          repository: stormchecker/stormpy
-          ref: master
+          repository: volkm/stormpy
+          ref: ci-wheels
           path: stormpy-version
           fetch-depth: 1
           sparse-checkout: |
@@ -63,14 +63,14 @@ jobs:
             version_suffix: ""
           - build_type: Debug
             version_suffix: "+debug"
-    uses: stormchecker/stormpy/.github/workflows/create_wheel.yml@master
+    uses: volkm/stormpy/.github/workflows/create_wheel.yml@ci-wheels
     with:
       storm_version: master
       version: ${{ needs.compute-version.outputs.version }}${{ matrix.config.version_suffix }}
       full_build: false
       build_type: ${{ matrix.config.build_type }}
-      repo: stormchecker/stormpy
-      ref: master
+      repo: volkm/stormpy
+      ref: ci-wheels
 
 
   release:
@@ -100,7 +100,7 @@ jobs:
         with:
           tag_name: nightly
           name: Nightly build
-          body: Automated nightly build from stormchecker/stormpy@${{ needs.compute-version.outputs.stormpy_sha }}
+          body: Automated nightly build from volkm/stormpy@${{ needs.compute-version.outputs.stormpy_sha }}
           prerelease: true
           files: wheelhouse/*.whl
 
